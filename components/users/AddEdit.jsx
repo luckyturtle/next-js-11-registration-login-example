@@ -72,7 +72,7 @@ function AddEdit(props) {
                     <select name="pubkey" id="pubkey" {...register('pubkey')} className={`form-control ${errors.pubkey ? 'is-invalid' : ''}`}>
                         { props.ownedNfts && props.ownedNfts.filter((nftData) => {
                             if (!nft) {
-                                if (props.listedNfts.map((nft) => nft.pubkey).indexOf(nftData.mint) == -1 ) return 1;
+                                if (!props.listedNfts || props.listedNfts.map((nft) => nft.pubkey).indexOf(nftData.mint) == -1 ) return 1;
                                 return 0;
                             }
                             if (nft.pubkey === nftData.mint) return 1;
