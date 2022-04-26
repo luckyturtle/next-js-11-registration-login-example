@@ -6,11 +6,11 @@ import { fetchWrapper } from 'helpers';
 
 const { publicRuntimeConfig } = getConfig();
 const baseUrl = `${publicRuntimeConfig.apiUrl}/users`;
-const userSubject = new BehaviorSubject(process.browser && JSON.parse(localStorage.getItem('user')));
+const nftSubject = new BehaviorSubject(process.browser && JSON.parse(localStorage.getItem('nft')));
 
-export const userService = {
-    user: userSubject.asObservable(),
-    get userValue () { return userSubject.value },
+export const nftService = {
+    nft: nftSubject.asObservable(),
+    get nftValue () { return nftSubject.value },
     login,
     logout,
     register,
@@ -20,26 +20,26 @@ export const userService = {
     delete: _delete
 };
 
-function login(username, password) {
-    return fetchWrapper.post(`${baseUrl}/authenticate`, { username, password })
-        .then(user => {
-            // publish user to subscribers and store in local storage to stay logged in between page refreshes
-            userSubject.next(user);
-            localStorage.setItem('user', JSON.stringify(user));
+function login(nftname, password) {
+    return fetchWrapper.post(`${baseUrl}/authenticate`, { nftname })
+        .then(nft => {
+            // publish nft to subscribers and store in local storage to stay logged in between page refreshes
+            nftSubject.next(nft);
+            localStorage.setItem('nft', JSON.stringify(nft));
 
-            return user;
+            return nft;
         });
 }
 
 function logout() {
-    // remove user from local storage, publish null to user subscribers and redirect to login page
-    localStorage.removeItem('user');
-    userSubject.next(null);
-    Router.push('/account/login');
+    // remove nft from local storage, publish null to nft subscribers and redirect to login page
+    localStorage.removeItem('nft');
+    nftSubject.next(null);
+    // Router.push('/users');
 }
 
-function register(user) {
-    return fetchWrapper.post(`${baseUrl}/register`, user);
+function register(nft) {
+    return fetchWrapper.post(`${baseUrl}/register`, nft);
 }
 
 function getAll() {
@@ -53,15 +53,15 @@ function getById(id) {
 function update(id, params) {
     return fetchWrapper.put(`${baseUrl}/${id}`, params)
         .then(x => {
-            // update stored user if the logged in user updated their own record
-            if (id === userSubject.value.id) {
+            // update stored nft if the logged in nft updated their own record
+            // if (id === nftSubject.value.id) {
                 // update local storage
-                const user = { ...userSubject.value, ...params };
-                localStorage.setItem('user', JSON.stringify(user));
+                // const nft = { ...nftSubject.value, ...params };
+                // localStorage.setItem('nft', JSON.stringify(nft));
 
-                // publish updated user to subscribers
-                userSubject.next(user);
-            }
+                // publish updated nft to subscribers
+                // nftSubject.next(nft);
+            // }
             return x;
         });
 }

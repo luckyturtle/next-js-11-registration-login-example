@@ -1,31 +1,29 @@
 import { useState, useEffect } from 'react';
 
-import { NavLink } from '.';
-import { userService } from 'services';
+// import { NavLink } from '.';
+import { nftService } from 'services';
+import { WalletModalProvider, WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 
 export { Nav };
 
 function Nav() {
-    const [user, setUser] = useState(null);
+    const [nft, setNft] = useState(null);
 
     useEffect(() => {
-        const subscription = userService.user.subscribe(x => setUser(x));
+        const subscription = nftService.nft.subscribe(x => setNft(x));
         return () => subscription.unsubscribe();
     }, []);
 
-    function logout() {
-        userService.logout();
-    }
-
-    // only show nav when logged in
-    if (!user) return null;
+    // function logout() {
+    //     nftService.logout();
+    // }
     
     return (
         <nav className="navbar navbar-expand navbar-dark bg-dark">
             <div className="navbar-nav">
-                <NavLink href="/" exact className="nav-item nav-link">Home</NavLink>
-                <NavLink href="/users" className="nav-item nav-link">Users</NavLink>
-                <a onClick={logout} className="nav-item nav-link">Logout</a>
+                <WalletModalProvider>
+                    <WalletMultiButton />
+                </WalletModalProvider>
             </div>
         </nav>
     );

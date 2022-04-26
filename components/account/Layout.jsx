@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 
-import { userService } from 'services';
+import { nftService } from 'services';
 
 export { Layout };
 
@@ -10,7 +10,7 @@ function Layout({ children }) {
 
     useEffect(() => {
         // redirect to home if already logged in
-        if (userService.userValue) {
+        if (nftService.nftValue) {
             router.push('/');
         }
 

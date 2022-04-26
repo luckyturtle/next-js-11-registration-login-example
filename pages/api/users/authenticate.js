@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 import getConfig from 'next/config';
 
-import { apiHandler, usersRepo } from 'helpers/api';
+import { apiHandler, nftsRepo } from 'helpers/api';
 
 const { serverRuntimeConfig } = getConfig();
 
@@ -11,23 +11,23 @@ export default apiHandler({
 });
 
 function authenticate(req, res) {
-    const { username, password } = req.body;
-    const user = usersRepo.find(u => u.username === username);
+    const { discordId } = req.body;
+    const nft = nftsRepo.find(u => u.discordId === discordId);
 
-    // validate
-    if (!(user && bcrypt.compareSync(password, user.hash))) {
-        throw 'Username or password is incorrect';
-    }
+    // // validate
+    // if (!(nft && bcrypt.compareSync(password, nft.hash))) {
+    //     throw 'discordId or password is incorrect';
+    // }
 
     // create a jwt token that is valid for 7 days
-    const token = jwt.sign({ sub: user.id }, serverRuntimeConfig.secret, { expiresIn: '7d' });
+    // const token = jwt.sign({ sub: nft.id }, serverRuntimeConfig.secret, { expiresIn: '7d' });
 
-    // return basic user details and token
+    // return basic nft details and token
     return res.status(200).json({
-        id: user.id,
-        username: user.username,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        token
+        id: nft.id,
+        discordId: nft.discordId,
+        pubkey: nft.pubkey,
+        ipAddress: nft.ipAddress,
+        token: undefined,
     });
 }

@@ -4,19 +4,22 @@ import { useRouter } from 'next/router';
 
 import 'styles/globals.css';
 
-import { userService } from 'services';
-import { Nav, Alert } from 'components';
+import { nftService } from 'services';
+import { Nav, Alert, Wallet } from 'components';
 
 export default App;
 
 function App({ Component, pageProps }) {
     const router = useRouter();
-    const [user, setUser] = useState(null);
+    const [nft, setNft] = useState(null);
+    const [ownedNfts, setOwnedNfts] = useState([]);
     const [authorized, setAuthorized] = useState(false);
 
     useEffect(() => {
+        setNft(nftService.nftValue);
+        router.push('/nfts');
         // on initial load - run auth check 
-        authCheck(router.asPath);
+        // authCheck(router.asPath);
 
         // on route change start - hide page content by setting authorized to false  
         const hideContent = () => setAuthorized(false);
@@ -36,45 +39,32 @@ function App({ Component, pageProps }) {
 
     function authCheck(url) {
         // redirect to login page if accessing a private page and not logged in 
-        setUser(userService.userValue);
-        const publicPaths = ['/account/login', '/account/register'];
+        setNft(nftService.nftValue);
+        const publicPaths = ['/account/login', '/account/register', '/nfts/*'];
         const path = url.split('?')[0];
-        if (!userService.userValue && !publicPaths.includes(path)) {
-            setAuthorized(false);
-            router.push({
-                pathname: '/account/login',
-                query: { returnUrl: router.asPath }
-            });
-        } else {
-            setAuthorized(true);
-        }
+        // if (!nftService.nftValue && !publicPaths.includes(path)) {
+        //     setAuthorized(false);
+        setAuthorized(true);
+        // router.push('/nfts');
+        // } else {
+        // }
     }
 
     return (
         <>
             <Head>
-                <title>Next.js 11 - User Registration and Login Example</title>
+                <title>NFT Collector</title>
                 
                 {/* eslint-disable-next-line @next/next/no-css-tags */}
                 <link href="//netdna.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
             </Head>
 
-            <div className={`app-container ${user ? 'bg-light' : ''}`}>
-                <Nav />
-                <Alert />
-                {authorized &&
-                    <Component {...pageProps} />
-                }
-            </div>
-
-            {/* credits */}
-            <div className="text-center mt-4">
-                <p>
-                    <a href="https://jasonwatmore.com/post/2021/08/19/next-js-11-user-registration-and-login-tutorial-with-example-app" target="_top">Next.js 11 - User Registration and Login Tutorial with Example App</a>
-                </p>
-                <p>
-                    <a href="https://jasonwatmore.com" target="_top">JasonWatmore.com</a>
-                </p>
+            <div className={`app-container ${nft ? 'bg-light' : ''}`}>
+                <Wallet>
+                    <Nav />
+                    <Alert />
+                    <Component {...pageProps} ownedNfts={ownedNfts} setOwnedNfts={setOwnedNfts} />
+                </Wallet>
             </div>
         </>
     );

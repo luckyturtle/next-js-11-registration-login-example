@@ -3,3 +3,10 @@ a { cursor: pointer; }
 .app-container {
     min-height: 350px;
 }
+
+.navbar-expand {
+    justify-content: flex-end;
+    position: fixed;
+    width: 100%;
+    background: transparent !important;
+}

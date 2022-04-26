@@ -4,33 +4,36 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 
 import { Link } from 'components';
-import { userService, alertService } from 'services';
+import { nftService, alertService } from 'services';
+import { useEffect } from 'react';
 
 export { AddEdit };
 
 function AddEdit(props) {
-    const user = props?.user;
-    const isAddMode = !user;
+    const nft = props?.nft;
+    const isAddMode = !nft;
     const router = useRouter();
+
+    useEffect(() => {
+        if (props.ownedNfts && props.ownedNfts.length > 0) {
+            // console.log(props.ownedNfts)
+        }
+    }, [props]);
     
     // form validation rules 
     const validationSchema = Yup.object().shape({
-        firstName: Yup.string()
-            .required('First Name is required'),
-        lastName: Yup.string()
-            .required('Last Name is required'),
-        username: Yup.string()
-            .required('Username is required'),
-        password: Yup.string()
-            .transform(x => x === '' ? undefined : x)
-            .concat(isAddMode ? Yup.string().required('Password is required') : null)
-            .min(6, 'Password must be at least 6 characters')
+        pubkey: Yup.string()
+            .required('NFT Pubkey is required'),
+        ipAddress: Yup.string()
+            .required('IP Address is required'),
+        discordId: Yup.string()
+            .required('Discord ID is required'),
     });
     const formOptions = { resolver: yupResolver(validationSchema) };
 
     // set default form values if in edit mode
     if (!isAddMode) {
-        formOptions.defaultValues = props.user;
+        formOptions.defaultValues = props.nft;
     }
 
     // get functions to build form with useForm() hook
@@ -39,23 +42,23 @@ function AddEdit(props) {
 
     function onSubmit(data) {
         return isAddMode
-            ? createUser(data)
-            : updateUser(user.id, data);
+            ? createNft(data)
+            : updateNft(nft.id, data);
     }
 
-    function createUser(data) {
-        return userService.register(data)
+    function createNft(data) {
+        return nftService.register(data)
             .then(() => {
-                alertService.success('User added', { keepAfterRouteChange: true });
+                alertService.success('Nft added', { keepAfterRouteChange: true });
                 router.push('.');
             })
             .catch(alertService.error);
     }
 
-    function updateUser(id, data) {
-        return userService.update(id, data)
+    function updateNft(id, data) {
+        return nftService.update(id, data)
             .then(() => {
-                alertService.success('User updated', { keepAfterRouteChange: true });
+                alertService.success('Nft updated', { keepAfterRouteChange: true });
                 router.push('..');
             })
             .catch(alertService.error);
@@ -65,29 +68,32 @@ function AddEdit(props) {
         <form onSubmit={handleSubmit(onSubmit)}>
             <div className="form-row">
                 <div className="form-group col">
-                    <label>First Name</label>
-                    <input name="firstName" type="text" {...register('firstName')} className={`form-control ${errors.firstName ? 'is-invalid' : ''}`} />
-                    <div className="invalid-feedback">{errors.firstName?.message}</div>
+                    <label>Nft Pubkey</label>
+                    <select name="pubkey" id="pubkey" {...register('pubkey')} className={`form-control ${errors.pubkey ? 'is-invalid' : ''}`}>
+                        { props.ownedNfts && props.ownedNfts.filter((nftData) => {
+                            if (!nft) return 1;
+                            if (nft.pubkey === nftData.mint) return 1;
+                            return 0;
+                        }).map((nftData, index) => 
+                            <option value={nftData.mint} key={index}>{nftData.name} ({nftData.mint.slice(0, 5) + '...' + nftData.mint.slice(-3)})</option>
+                        )}
+                    </select>
+                    {/* <input name="pubkey" type="text" {...register('pubkey')} className={`form-control ${errors.pubkey ? 'is-invalid' : ''}`} /> */}
+                    <div className="invalid-feedback">{errors.pubkey?.message}</div>
                 </div>
                 <div className="form-group col">
-                    <label>Last Name</label>
-                    <input name="lastName" type="text" {...register('lastName')} className={`form-control ${errors.lastName ? 'is-invalid' : ''}`} />
-                    <div className="invalid-feedback">{errors.lastName?.message}</div>
+                    <label>IP Address</label>
+                    <input name="ipAddress" type="text" {...register('ipAddress')} className={`form-control ${errors.ipAddress ? 'is-invalid' : ''}`} />
+                    <div className="invalid-feedback">{errors.ipAddress?.message}</div>
                 </div>
             </div>
             <div className="form-row">
                 <div className="form-group col">
-                    <label>Username</label>
-                    <input name="username" type="text" {...register('username')} className={`form-control ${errors.username ? 'is-invalid' : ''}`} />
-                    <div className="invalid-feedback">{errors.email?.message}</div>
+                    <label>Discord ID</label>
+                    <input name="discordId" type="text" {...register('discordId')} className={`form-control ${errors.discordId ? 'is-invalid' : ''}`} />
+                    <div className="invalid-feedback">{errors.discordId?.message}</div>
                 </div>
                 <div className="form-group col">
-                    <label>
-                        Password
-                        {!isAddMode && <em className="ml-1">(Leave blank to keep the same password)</em>}
-                    </label>
-                    <input name="password" type="password" {...register('password')} className={`form-control ${errors.password ? 'is-invalid' : ''}`} />
-                    <div className="invalid-feedback">{errors.password?.message}</div>
                 </div>
             </div>
             <div className="form-group">
@@ -96,7 +102,7 @@ function AddEdit(props) {
                     Save
                 </button>
                 <button onClick={() => reset(formOptions.defaultValues)} type="button" disabled={formState.isSubmitting} className="btn btn-secondary">Reset</button>
-                <Link href="/users" className="btn btn-link">Cancel</Link>
+                <Link href="/nfts" className="btn btn-link">Cancel</Link>
             </div>
         </form>
     );

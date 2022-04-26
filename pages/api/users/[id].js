@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 
 import { apiHandler } from 'helpers/api';
-import { usersRepo, omit } from 'helpers/api';
+import { nftsRepo, omit } from 'helpers/api';
 
 export default apiHandler({
     get: getById,
@@ -10,35 +10,35 @@ export default apiHandler({
 });
 
 function getById(req, res) {
-    const user = usersRepo.getById(req.query.id);
+    const nft = nftsRepo.getById(req.query.id);
 
-    if (!user) throw 'User Not Found';
+    if (!nft) throw 'Nft Not Found';
 
-    return res.status(200).json(omit(user, 'hash'));
+    return res.status(200).json(omit(nft, 'hash'));
 }
 
 function update(req, res) {
-    const user = usersRepo.getById(req.query.id);
+    const nft = nftsRepo.getById(req.query.id);
 
-    if (!user) throw 'User Not Found';
+    if (!nft) throw 'Nft Not Found';
 
-    // split out password from user details 
-    const { password, ...params } = req.body;
+    // split out password from Nft details 
+    const { ...params } = req.body;
 
     // validate
-    if (user.username !== params.username && usersRepo.find(x => x.username === params.username))
-        throw `User with the username "${params.username}" already exists`;
+    if (nft.discordId !== params.discordId && nftsRepo.find(x => x.discordId === params.discordId))
+        throw `Nft with the discordId "${params.discordId}" already exists`;
 
-    // only update hashed password if entered
-    if (password) {
-        user.hash = bcrypt.hashSync(password, 10);
-    }
+    // // only update hashed password if entered
+    // if (password) {
+    //     Nft.hash = bcrypt.hashSync(password, 10);
+    // }
 
-    usersRepo.update(req.query.id, params);
+    nftsRepo.update(req.query.id, params);
     return res.status(200).json({});
 }
 
 function _delete(req, res) {
-    usersRepo.delete(req.query.id);
+    nftsRepo.delete(req.query.id);
     return res.status(200).json({});
 }
