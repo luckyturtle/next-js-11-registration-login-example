@@ -1,1 +1,26 @@
-[]
+[
+    {
+        "pubkey": "FPYsJt76do4QwyXvjECSUHQ6Y2fe8348auhPArdbjiNU",
+        "ipAddress": "192.168.108.123",
+        "discordId": "@TestUser#1",
+        "id": 1,
+        "dateCreated": "2022-04-26T09:19:30.862Z",
+        "dateUpdated": "2022-04-26T09:19:30.862Z"
+    },
+    {
+        "pubkey": "7UNpgzqmdy9ecozPbgCtoPMcMaWLfR9NgaFkSJFypmm9",
+        "ipAddress": "192.168.108.96",
+        "discordId": "@TestUser",
+        "id": 2,
+        "dateCreated": "2022-04-26T09:19:58.610Z",
+        "dateUpdated": "2022-04-26T09:19:58.610Z"
+    },
+    {
+        "pubkey": "FCCC4dmJZs73LtYChY8sT4xjUfCdqAGMDJ5rr9HkT28Y",
+        "ipAddress": "192.168.108.100",
+        "discordId": "@TestUser#12",
+        "id": 3,
+        "dateCreated": "2022-04-26T09:20:09.329Z",
+        "dateUpdated": "2022-04-26T09:20:09.329Z"
+    }
+]

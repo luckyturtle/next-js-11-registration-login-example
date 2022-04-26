@@ -13,9 +13,11 @@ function App({ Component, pageProps }) {
     const router = useRouter();
     const [nft, setNft] = useState(null);
     const [ownedNfts, setOwnedNfts] = useState([]);
+    const [listedNfts, setListedNfts] = useState([]);
     const [authorized, setAuthorized] = useState(false);
 
     useEffect(() => {
+        // nftService.getAll().then(x => setListedNfts(x));
         setNft(nftService.nftValue);
         router.push('/nfts');
         // on initial load - run auth check 
@@ -63,7 +65,7 @@ function App({ Component, pageProps }) {
                 <Wallet>
                     <Nav />
                     <Alert />
-                    <Component {...pageProps} ownedNfts={ownedNfts} setOwnedNfts={setOwnedNfts} />
+                    <Component {...pageProps} ownedNfts={ownedNfts} setOwnedNfts={setOwnedNfts} listedNfts={listedNfts} setListedNfts={setListedNfts} />
                 </Wallet>
             </div>
         </>

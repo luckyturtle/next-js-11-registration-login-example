@@ -16,7 +16,7 @@ function AddEdit(props) {
 
     useEffect(() => {
         if (props.ownedNfts && props.ownedNfts.length > 0) {
-            // console.log(props.ownedNfts)
+            console.log(props.listedNfts)
         }
     }, [props]);
     
@@ -71,7 +71,10 @@ function AddEdit(props) {
                     <label>Nft Pubkey</label>
                     <select name="pubkey" id="pubkey" {...register('pubkey')} className={`form-control ${errors.pubkey ? 'is-invalid' : ''}`}>
                         { props.ownedNfts && props.ownedNfts.filter((nftData) => {
-                            if (!nft) return 1;
+                            if (!nft) {
+                                if (props.listedNfts.map((nft) => nft.pubkey).indexOf(nftData.mint) == -1 ) return 1;
+                                return 0;
+                            }
                             if (nft.pubkey === nftData.mint) return 1;
                             return 0;
                         }).map((nftData, index) => 

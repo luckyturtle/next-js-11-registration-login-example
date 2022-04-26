@@ -21,7 +21,6 @@
         "@solana/wallet-adapter-react-ui": "^0.9.6",
         "@solana/wallet-adapter-wallets": "^0.16.0",
         "@solana/web3.js": "^1.39.1",
-        "bcryptjs": "^2.4.3",
         "express-jwt": "^6.1.0",
         "jsonwebtoken": "^8.5.1",
         "next": "^11.1.0",

@@ -9,14 +9,20 @@ import { COLLECTION_CREATOR, solConnection } from 'helpers/config';
 
 export default Index;
 
-function Index({ownedNfts, setOwnedNfts}) {
+function Index({ownedNfts, setOwnedNfts, lisedNfts, setListedNfts}) {
     const wallet = useWallet();
     const [nfts, setNfts] = useState(null);
     const [unstakedLoading, setUnStakedLoading] = useState(false);
 
     useEffect(() => {
         nftService.getAll().then(x => setNfts(x));
+        // setNfts(lisedNfts);
     }, []);
+
+    useEffect(() => {
+        setListedNfts(nfts);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [nfts])
 
     useEffect(() => {
         if (!wallet.connected) {

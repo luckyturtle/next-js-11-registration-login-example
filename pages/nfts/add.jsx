@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 
 export default Add;
 
-function Add({ownedNfts}) {
+function Add({ownedNfts, listedNfts}) {
     const wallet = useWallet();
     const router = useRouter();
 
@@ -19,7 +19,7 @@ function Add({ownedNfts}) {
     return (
         <Layout>
             <h1>Add Nft</h1>
-            <AddEdit ownedNfts={ownedNfts} />
+            <AddEdit ownedNfts={ownedNfts} listedNfts={listedNfts} />
         </Layout>
     );
 }

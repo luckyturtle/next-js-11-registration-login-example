@@ -1,5 +1,5 @@
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
+// const jwt = require('jsonwebtoken');
+// const bcrypt = require('bcryptjs');
 import getConfig from 'next/config';
 
 import { apiHandler, nftsRepo } from 'helpers/api';

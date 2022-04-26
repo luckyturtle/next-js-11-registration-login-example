@@ -1,4 +1,4 @@
-const bcrypt = require('bcryptjs');
+// const bcrypt = require('bcryptjs');
 
 import { apiHandler } from 'helpers/api';
 import { nftsRepo, omit } from 'helpers/api';
