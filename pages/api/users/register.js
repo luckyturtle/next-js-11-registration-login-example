@@ -11,8 +11,8 @@ function register(req, res) {
     const { ...nft } = req.body;
 
     // validate
-    if (nftsRepo.find(x => x.discordId === nft.discordId))
-        throw `Nft with the discordId "${nft.discordId}" already exists`;
+    // if (nftsRepo.find(x => x.discordId === nft.discordId))
+    //     throw `Nft with the discordId "${nft.discordId}" already exists`;
 
     // hash password
     // nft.hash = bcrypt.hashSync(password, 10);    

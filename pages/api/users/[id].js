@@ -26,8 +26,8 @@ function update(req, res) {
     const { ...params } = req.body;
 
     // validate
-    if (nft.discordId !== params.discordId && nftsRepo.find(x => x.discordId === params.discordId))
-        throw `Nft with the discordId "${params.discordId}" already exists`;
+    // if (nft.discordId !== params.discordId && nftsRepo.find(x => x.discordId === params.discordId))
+    //     throw `Nft with the discordId "${params.discordId}" already exists`;
 
     // // only update hashed password if entered
     // if (password) {

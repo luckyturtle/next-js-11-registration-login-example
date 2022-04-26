@@ -11,9 +11,9 @@ export default apiHandler({
 });
 
 function authenticate(req, res) {
-    const { discordId } = req.body;
-    const nft = nftsRepo.find(u => u.discordId === discordId);
-
+    // const { discordId } = req.body;
+    // const nft = nftsRepo.find(u => u.discordId === discordId);
+    const nft = {};
     // // validate
     // if (!(nft && bcrypt.compareSync(password, nft.hash))) {
     //     throw 'discordId or password is incorrect';
