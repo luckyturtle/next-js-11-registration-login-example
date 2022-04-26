@@ -24,10 +24,12 @@ function Index({ownedNfts, setOwnedNfts}) {
             return;
         }
         getUnstakedNFTs();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [wallet.connected])
 
     useEffect(() => {
         console.log('Owned Nfts:', ownedNfts);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ownedNfts]);
 
     const getUnstakedNFTs = async () => {

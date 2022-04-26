@@ -13,7 +13,8 @@ function Add({ownedNfts}) {
         if (!wallet.connected || ownedNfts.length == 0) {
             router.push('/nfts');
         }
-    }, [wallet.connected]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [wallet.connected, ownedNfts]);
 
     return (
         <Layout>
