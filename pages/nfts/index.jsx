@@ -5,28 +5,19 @@ import { Layout } from 'components/users';
 import { nftService } from 'services';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { getParsedNftAccountsByOwner } from '@nfteyez/sol-rayz';
-import { COLLECTION_CREATOR, solConnection } from 'helpers/config';
+import { COLLECTION_CREATOR, solConnection, TOTAL_NFT_SUPPLY } from 'helpers/config';
 
 export default Index;
 
-function Index({ownedNfts, setOwnedNfts, lisedNfts, setListedNfts}) {
+function Index({ownedNfts, setOwnedNfts, setListedNfts}) {
     const wallet = useWallet();
-    const [nfts, setNfts] = useState(null);
+    const [nfts, setNfts] = useState([]);
     const [unstakedLoading, setUnStakedLoading] = useState(false);
-
-    useEffect(() => {
-        nftService.getAll().then(x => setNfts(x));
-        // setNfts(lisedNfts);
-    }, []);
-
-    useEffect(() => {
-        setListedNfts(nfts);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [nfts])
 
     useEffect(() => {
         if (!wallet.connected) {
             setOwnedNfts([]);
+            setNfts([]);
             return;
         }
         getUnstakedNFTs();
@@ -34,15 +25,34 @@ function Index({ownedNfts, setOwnedNfts, lisedNfts, setListedNfts}) {
     }, [wallet.connected])
 
     useEffect(() => {
+        if (!wallet.publicKey || unstakedLoading || ownedNfts.length == 0) {
+            setNfts([]);
+            return;
+        }
+        nftService.getAll().then(x => 
+            setNfts(x.filter((nft) => {
+                if (ownedNfts.map((nft) => nft.mint).indexOf(nft.pubkey) == -1) return 0;
+                if (nft.wallet !== wallet.publicKey.toBase58()) {
+                    nftService.delete(nft.id).then().catch();
+                    return 0;
+                }
+                return 1;
+            }))
+        );
         console.log('Owned Nfts:', ownedNfts);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [ownedNfts]);
+    }, [ownedNfts, unstakedLoading]);
+
+    useEffect(() => {
+        setListedNfts(nfts);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [nfts])
+
 
     const getUnstakedNFTs = async () => {
         setUnStakedLoading(true);
 
         const unstakedNftList = await getMetadataDetail();
-        // console.log(unstakedNftList, "==> list")
 
         if (unstakedNftList.length !== 0) {
         let nftDump = [], count = 0, nftCount = 0;
@@ -107,9 +117,9 @@ function Index({ownedNfts, setOwnedNfts, lisedNfts, setListedNfts}) {
             { unstakedLoading ? 
                 <Spinner />
             :
-                <h1>{ownedNfts.length} nfts in wallet</h1>
+                <h1>{ownedNfts.length} out of {TOTAL_NFT_SUPPLY} NFTs have been entered</h1>
             }
-            { ownedNfts.length > 0 &&
+            { ownedNfts.length > 0 && ownedNfts.length !== nfts.length &&
                 <Link href="/nfts/add" className="btn btn-sm btn-success mb-2">Add Nft</Link>
             }
             <table className="table table-striped">
@@ -122,11 +132,7 @@ function Index({ownedNfts, setOwnedNfts, lisedNfts, setListedNfts}) {
                     </tr>
                 </thead>
                 <tbody>
-                    {nfts && nfts.filter((nft) => {
-                        if (ownedNfts.length == 0) return 1;
-                        if (ownedNfts.map((nft) => nft.mint).indexOf(nft.pubkey) == -1) return 0;
-                        return 1;
-                    }).map(nft =>
+                    {nfts && nfts.map(nft =>
                         <tr key={nft.id}>
                             <td>{nft.pubkey}</td>
                             <td>{nft.ipAddress}</td>

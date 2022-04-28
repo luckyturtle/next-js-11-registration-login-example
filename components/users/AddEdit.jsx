@@ -18,6 +18,7 @@ function AddEdit(props) {
         if (props.ownedNfts && props.ownedNfts.length > 0) {
             console.log(props.listedNfts)
         }
+        if (!props.address) router.push('/nfts');
     }, [props]);
     
     // form validation rules 
@@ -41,9 +42,39 @@ function AddEdit(props) {
     const { errors } = formState;
 
     function onSubmit(data) {
+        // Validation check
+        if (data.discordId.indexOf('#') === -1) {
+            return alertService.error('Invalid Discord Id');
+        }
+        const discordBufs = data.discordId.split('#');
+        const id = discordBufs[discordBufs.length - 1];
+        if (id.length !== 4 || !/^\d+$/.test(id)) {
+            return alertService.error('Invalid Discord Id');
+        }
+
+        const ipBufs = data.ipAddress.split('.');
+        if (ipBufs.length !== 4) {
+            return alertService.error('Invalid IP Address');
+        }
+        for (let buf of ipBufs) {
+            if (!/^\d+$/.test(buf) || parseInt(buf) > 255) {
+                return alertService.error('Invalid IP Address');
+            }
+        }
+        console.log({
+            ...data,
+            wallet: props.address.toBase58(),
+        })
+
         return isAddMode
-            ? createNft(data)
-            : updateNft(nft.id, data);
+            ? createNft({
+                ...data,
+                wallet: props.address.toBase58(),
+            })
+            : updateNft(nft.id, {
+                ...data,
+                wallet: props.address.toBase58(),
+            });
     }
 
     function createNft(data) {
@@ -84,6 +115,8 @@ function AddEdit(props) {
                     {/* <input name="pubkey" type="text" {...register('pubkey')} className={`form-control ${errors.pubkey ? 'is-invalid' : ''}`} /> */}
                     <div className="invalid-feedback">{errors.pubkey?.message}</div>
                 </div>
+            </div>
+            <div className="form-row">
                 <div className="form-group col">
                     <label>IP Address</label>
                     <input name="ipAddress" type="text" {...register('ipAddress')} className={`form-control ${errors.ipAddress ? 'is-invalid' : ''}`} />
@@ -96,15 +129,13 @@ function AddEdit(props) {
                     <input name="discordId" type="text" {...register('discordId')} className={`form-control ${errors.discordId ? 'is-invalid' : ''}`} />
                     <div className="invalid-feedback">{errors.discordId?.message}</div>
                 </div>
-                <div className="form-group col">
-                </div>
             </div>
             <div className="form-group">
                 <button type="submit" disabled={formState.isSubmitting} className="btn btn-primary mr-2">
                     {formState.isSubmitting && <span className="spinner-border spinner-border-sm mr-1"></span>}
                     Save
                 </button>
-                <button onClick={() => reset(formOptions.defaultValues)} type="button" disabled={formState.isSubmitting} className="btn btn-secondary">Reset</button>
+                {!nft && <button onClick={() => reset(formOptions.defaultValues)} type="button" disabled={formState.isSubmitting} className="btn btn-secondary">Reset</button>}
                 <Link href="/nfts" className="btn btn-link">Cancel</Link>
             </div>
         </form>

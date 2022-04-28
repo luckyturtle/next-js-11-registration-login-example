@@ -17,11 +17,11 @@ function App({ Component, pageProps }) {
     const [authorized, setAuthorized] = useState(false);
 
     useEffect(() => {
-        // nftService.getAll().then(x => setListedNfts(x));
         setNft(nftService.nftValue);
         router.push('/nfts');
         // on initial load - run auth check 
         // authCheck(router.asPath);
+        // nftService.getAll().then(x => setListedNfts(x));
 
         // on route change start - hide page content by setting authorized to false  
         const hideContent = () => setAuthorized(false);

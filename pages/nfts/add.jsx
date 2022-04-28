@@ -19,7 +19,7 @@ function Add({ownedNfts, listedNfts}) {
     return (
         <Layout>
             <h1>Add Nft</h1>
-            <AddEdit ownedNfts={ownedNfts} listedNfts={listedNfts} />
+            <AddEdit ownedNfts={ownedNfts} listedNfts={listedNfts} address={wallet.publicKey} />
         </Layout>
     );
 }

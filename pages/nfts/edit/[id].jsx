@@ -34,7 +34,7 @@ function Edit({ id, ownedNfts }) {
     return (
         <Layout>
             <h1>Edit Nft</h1>
-            {nft ? <AddEdit nft={nft} ownedNfts={ownedNfts} /> : <Spinner /> }
+            {nft ? <AddEdit nft={nft} ownedNfts={ownedNfts} address={wallet.publicKey} /> : <Spinner /> }
         </Layout>
     );
 }
