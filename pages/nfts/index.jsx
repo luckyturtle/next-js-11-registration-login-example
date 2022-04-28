@@ -117,7 +117,7 @@ function Index({ownedNfts, setOwnedNfts, setListedNfts}) {
             { unstakedLoading ? 
                 <Spinner />
             :
-                <h1>{nfts.length} out of {ownedNfts.length} NFTs have been entered</h1>
+                <h4>{nfts.length} out of {ownedNfts.length} NFTs have...</h4>
             }
             { ownedNfts.length > 0 && ownedNfts.length !== nfts.length &&
                 <Link href="/nfts/add" className="btn btn-sm btn-success mb-2">Add Nft</Link>
