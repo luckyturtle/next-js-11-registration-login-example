@@ -51,6 +51,7 @@ function AddEdit(props) {
         if (id.length !== 4 || !/^\d+$/.test(id))
             return alertService.error('Invalid Discord Id');
 
+        if (data.ipAddress === '0.0.0.0') return alertService.error('Invalid IP Address');
         const ipBufs = data.ipAddress.split('.');
         if (ipBufs.length !== 4)
             return alertService.error('Invalid IP Address');
@@ -61,10 +62,6 @@ function AddEdit(props) {
             if (buf.length > 1 && buf[0] === '0')
                 return alertService.error('Invalid IP Address');
         }
-        console.log({
-            ...data,
-            wallet: props.address.toBase58(),
-        })
 
         return isAddMode
             ? createNft({
