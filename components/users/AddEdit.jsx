@@ -43,23 +43,23 @@ function AddEdit(props) {
 
     function onSubmit(data) {
         // Validation check
-        if (data.discordId.indexOf('#') === -1) {
+        if (data.discordId.indexOf('#') === -1)
             return alertService.error('Invalid Discord Id');
-        }
+
         const discordBufs = data.discordId.split('#');
         const id = discordBufs[discordBufs.length - 1];
-        if (id.length !== 4 || !/^\d+$/.test(id)) {
+        if (id.length !== 4 || !/^\d+$/.test(id))
             return alertService.error('Invalid Discord Id');
-        }
 
         const ipBufs = data.ipAddress.split('.');
-        if (ipBufs.length !== 4) {
+        if (ipBufs.length !== 4)
             return alertService.error('Invalid IP Address');
-        }
+
         for (let buf of ipBufs) {
-            if (!/^\d+$/.test(buf) || parseInt(buf) > 255) {
+            if (!/^\d+$/.test(buf) || parseInt(buf) > 254)
                 return alertService.error('Invalid IP Address');
-            }
+            if (buf.length > 1 && buf[0] === '0')
+                return alertService.error('Invalid IP Address');
         }
         console.log({
             ...data,

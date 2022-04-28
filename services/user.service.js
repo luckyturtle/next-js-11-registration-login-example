@@ -43,11 +43,11 @@ function register(nft) {
 }
 
 function getAll() {
-    return fetchWrapper.get(baseUrl);
+    return fetchWrapper.post(baseUrl);
 }
 
 function getById(id) {
-    return fetchWrapper.get(`${baseUrl}/${id}`);
+    return fetchWrapper.post(`${baseUrl}/${id}`);
 }
 
 function update(id, params) {

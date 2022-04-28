@@ -4,7 +4,7 @@ import { apiHandler } from 'helpers/api';
 import { nftsRepo, omit } from 'helpers/api';
 
 export default apiHandler({
-    get: getById,
+    post: getById,
     put: update,
     delete: _delete
 });

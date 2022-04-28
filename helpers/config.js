@@ -4,5 +4,3 @@ export const solConnection = new web3.Connection(web3.clusterApiUrl("mainnet-bet
 // export const solConnection = new web3.Connection("https://solana-api.projectserum.com");
 
 export const COLLECTION_CREATOR = "5NKURKDUonfEhZuxoAu8A6FWz1RH1y1gEqeVzUecw5Fa";
-
-export const TOTAL_NFT_SUPPLY = 196;
